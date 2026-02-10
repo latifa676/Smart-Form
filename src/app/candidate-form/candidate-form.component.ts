@@ -1,20 +1,42 @@
 import { Component } from '@angular/core';
-import { CommonModule, NgIf, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NgIf, NgClass } from '@angular/common';
 
 @Component({
   selector: 'app-candidate-form',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgIf, NgClass],
+  imports: [FormsModule, NgIf, NgClass],
   templateUrl: './candidate-form.component.html',
-  styleUrl: './candidate-form.component.css'
+  styleUrls: ['./candidate-form.component.css']
 })
 export class CandidateFormComponent {
 
-  candidate = {
-    fullName: '',
+  candidateForm = {
+    name: '',
     email: '',
-    level: ''
+    level: '',
+    preferences: {
+      contract: 'CDI',
+      available: false
+    },
+    bio: ''
   };
 
+  candidatePreview: any = null;
+
+  submit(form: any) {
+    if (form.valid) {
+
+      this.candidatePreview = {
+        ...this.candidateForm,
+        preferences: { ...this.candidateForm.preferences }
+      };
+
+      alert('Candidature envoyée ✅');
+
+      form.resetForm({
+        preferences: { contract: 'CDI', available: false }
+      });
+    }
+  }
 }

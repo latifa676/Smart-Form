@@ -1,141 +1,93 @@
-<fieldset class="preference">
-    <form #prefernece="ngForm" (ngSubmit)="onSubmit(preference)">
-        <legend>Préférences de mission</legend>
-        <div class="prefenrence-form">
-            <label>type de contrat souhaite</label>
-            <div class="type-Contrat">
-                <label class="type1">
-                    <input 
-                    type="radio"
-                    name="contratType1"
-                    value="CDI"
-                    ngModel
-                    required
-                    checked
-                    #contratTypeRef="ngModel">
-                    <span>CDI</span>
-                </label>
+<form #f="ngForm" (ngSubmit)="submit(f)" class="container">
 
+  <!-- IDENTITÉ -->
+  <fieldset>
+    <legend>Identité</legend>
 
-                <label class="type2">
-                    <input 
-                    type="radio"
-                    name="contratType2"
-                    value="CDD"
-                    ngModel
-                    required
-                    checked
-                    #contratTypeRef="ngModel">
-                    <span>CDD</span>
-                </label>
+    <input
+      type="text"
+      name="name"
+      placeholder="Nom complet"
+      required
+      minlength="5"
+      [(ngModel)]="candidateForm.name"
+      #name="ngModel"
+      [ngClass]="{ valid: name.valid, invalid: name.invalid && name.touched }"
+    >
 
+    <p style="font-size:small;
+    color: red;" *ngIf="name.invalid && name.touched">Nom obligatoire (min 5 caractères)</p>
 
-                <label class="type3">
-                    <input 
-                    type="radio"
-                    name="contratType3"
-                    value="freelance"
-                    ngModel
-                    required
-                    checked
-                    #contratTypeRef="ngModel">
-                    <span>Freelance</span>
-                </label>
+    <input
+      type="email"
+      name="email"
+      placeholder="Email professionnel"
+      required
+      email
+      [(ngModel)]="candidateForm.email"
+      #email="ngModel"
+      [ngClass]="{ valid: email.valid, invalid: email.invalid && email.touched }"
+    >
+    <p style="
+    font-size:small;
+    color: red;" *ngIf="email.invalid && email.touched">Email invalide</p>
+
+    <select name="level" required [(ngModel)]="candidateForm.level" #level="ngModel">
+      <option value="">-- Niveau --</option>
+      <option>Junior</option>
+      <option>Confirmé</option>
+      <option>Senior</option>
+    </select>
+  </fieldset>
+
+  <!-- PRÉFÉRENCES -->
+  <fieldset ngModelGroup="preferences">
+    <legend>Préférences</legend>
+
+    <label>
+      <input type="radio" name="contract" value="CDI" [(ngModel)]="candidateForm.preferences.contract">
+      CDI
+    </label>
 
 
               
 
-             @if (contractTypeRef.invalid && contractTypeRef.touched) {
-            <div class="error-msg">
-              <span>⚠️ Veuillez sélectionner un type de contrat.</span>
-            </div>
-          }
-        </div>
-        <div class="preference-form">
-            <label class="checkbox">
-                <input 
-                type="checkbox" 
-                name="immediate" 
-                ngModel>
-                <span>Je suis disponible immediatement</span>
-            </label>
-        </div>
-        </div>
-    </form>
-</fieldset>
+    <label>
+      <input type="checkbox" name="available" [(ngModel)]="candidateForm.preferences.available">
+      Disponible immédiatement
+    </label>
+  </fieldset>
 
-<button type="submit" [disabled]="condidateForm.invalid">
-    soumettre ma candidature
-</button>
-<!-- Section Identité du Candidat -->
-<form class="form-section">
-    <legend>Identité du Candidat</legend>
+  <!-- BIO -->
+  <fieldset>
+    <legend>Bio</legend>
 
-    <!-- Nom complet -->
-    <div class="form-group">
-        <label for="fullName">Nom complet *</label>
-        <input type="text" id="fullName" name="fullName" [(ngModel)]="candidate.fullName" #fullNameRef="ngModel"
-            required minlength="5" [ngClass]="{
-        'valid': fullNameRef.valid && fullNameRef.touched,
-        'invalid': fullNameRef.invalid && fullNameRef.touched
-      }" />
+    <textarea
+      name="bio"
+      minlength="20"
+      maxlength="200"
+      [(ngModel)]="candidateForm.bio"
+      #bio="ngModel"
+    ></textarea>
 
-        <!-- Messages d'erreur -->
-        @if (fullNameRef.invalid && fullNameRef.touched) {
-        <div class="error-msg">
-            @if (fullNameRef.errors?.['required']) {
-            <span>⚠️ Le nom est obligatoire</span>
-            }
-            @if (fullNameRef.errors?.['minlength']) {
-            <span>⚠️ Minimum 5 caractères</span>
-            }
-        </div>
-        }
-    </div>
+    <p [ngClass]="{ danger: candidateForm.bio.length > 180 }">
+      {{ candidateForm.bio.length }}/200
+    </p>
+  </fieldset>
 
-    <!-- Email professionnel -->
-    <div class="form-group">
-        <label for="email">Email professionnel *</label>
-        <input type="email" id="email" name="email" [(ngModel)]="candidate.email" #emailRef="ngModel" required email
-            [ngClass]="{
-        'valid': emailRef.valid && emailRef.touched,
-        'invalid': emailRef.invalid && emailRef.touched
-      }" />
+  <button type="submit" [disabled]="f.invalid">
+    Postuler
+  </button>
 
-        <!-- Messages d'erreur -->
-        @if (emailRef.invalid && emailRef.touched) {
-        <div class="error-msg">
-            @if (emailRef.errors?.['required']) {
-            <span>⚠️ L'email est obligatoire</span>
-            }
-            @if (emailRef.errors?.['email']) {
-            <span>⚠️ Format d'email invalide</span>
-            }
-        </div>
-        }
-    </div>
-
-    <!-- Niveau -->
-    <div class="form-group">
-        <label for="level">Niveau d'expérience *</label>
-        <select id="level" name="level" [(ngModel)]="candidate.level" #levelRef="ngModel" required [ngClass]="{
-        'valid': levelRef.valid && levelRef.touched,
-        'invalid': levelRef.invalid && levelRef.touched
-      }">
-            <option value="" disabled selected>Sélectionnez votre niveau</option>
-            <option value="junior">Junior</option>
-            <option value="mid">Confirme</option>
-            <option value="senior">Senior</option>
-            <option value="lead">Lead</option>
-        </select>
-
-        <!-- Message d'erreur  -->
-        @if (levelRef.invalid && levelRef.touched) {
-        <div class="error-msg">
-            @if (levelRef.errors?.['required']) {
-            <span>⚠️ Sélectionnez votre niveau</span>
-            }
-        </div>
-        }
-    </div>
 </form>
+
+<!-- LIVE PREVIEW -->
+<div class="preview">
+  <h3>Carte Candidat</h3>
+  <p><b>Nom:</b> {{ candidateForm.name }}</p>
+  <p><b>Email:</b> {{ candidateForm.email }}</p>
+  <p><b>Niveau:</b> {{ candidateForm.level }}</p>
+  <p><b>Contrat:</b> {{ candidateForm.preferences.contract }}</p>
+  <p><b>Disponible:</b> {{ candidateForm.preferences.available ? 'Oui' : 'Non' }}</p>
+  <p><b>Bio:</b> {{ candidateForm.bio }}</p>
+</div>
