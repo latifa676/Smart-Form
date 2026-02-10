@@ -1,1 +1,79 @@
-<p>candidate-form works!</p>
+<fieldset class="preference">
+    <form #prefernece="ngForm" (ngSubmit)="onSubmit(preference)">
+        <legend>Préférences de mission</legend>
+        <div class="prefenrence-form">
+            <label>type de contrat souhaite</label>
+            <div class="type-Contrat">
+                <label class="type1">
+                    <input 
+                    type="radio"
+                    name="contratType1"
+                    value="CDI"
+                    ngModel
+                    required
+                    checked
+                    #contratTypeRef="ngModel">
+                    <span>CDI</span>
+                </label>
+
+
+                <label class="type2">
+                    <input 
+                    type="radio"
+                    name="contratType2"
+                    value="CDD"
+                    ngModel
+                    required
+                    checked
+                    #contratTypeRef="ngModel">
+                    <span>CDD</span>
+                </label>
+
+
+                <label class="type3">
+                    <input 
+                    type="radio"
+                    name="contratType3"
+                    value="freelance"
+                    ngModel
+                    required
+                    checked
+                    #contratTypeRef="ngModel">
+                    <span>Freelance</span>
+                </label>
+
+
+                <label class="type4">
+                    <input 
+                    type="radio"
+                    name="contratType4"
+                    value="stage"
+                    ngModel
+                    required
+                    checked
+                    #contratTypeRef="ngModel">
+                    <span>Stage</span>
+                </label>
+
+             @if (contractTypeRef.invalid && contractTypeRef.touched) {
+            <div class="error-msg">
+              <span>⚠️ Veuillez sélectionner un type de contrat.</span>
+            </div>
+          }
+        </div>
+        <div class="preference-form">
+            <label class="checkbox">
+                <input 
+                type="checkbox" 
+                name="immediate" 
+                ngModel>
+                <span>Je suis disponible immediatement</span>
+            </label>
+        </div>
+        </div>
+    </form>
+</fieldset>
+
+<button type="submit" [disabled]="condidateForm.invalid">
+    soumettre ma candidature
+</button>
